@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.search.bible_krv.sorting_type import SortingType
-from app.es.documents.bible_krv import BibleKRVDocument
 from app.search.bible_krv.search import Searcher
+from app.search.bible_krv.filter import Aggregator
 from app.schema.search import BibleSearchResponse
 
 router = APIRouter(prefix="/search")
@@ -16,19 +16,26 @@ def search_bible_krv(
     title: str | None = None,
     sorting_type: str | None = None,
 ) -> BibleSearchResponse:
+    books = None
+    if book:
+        books = [book for book in book.split(",")]
+
+    titles = None
+    if title:
+        titles = [title for title in title.split(",")]
+
     sorting_type = SortingType.find_by_name(sorting_type)
     result = Searcher.search(
         page=page,
         per_page=per_page,
         query=query,
-        book=book,
-        title=title,
+        books=books,
+        titles=titles,
         sorting_type=sorting_type,
     )
 
     total = result["total"]
     docs = result["docs"]
-    print(docs)
 
     prev_page = page - 1 if page > 1 else None
     next_page = page + 1 if per_page * page < total else None

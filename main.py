@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from app.config import settings
 from app.routers.es import router as es_router
 from app.routers.search import router as search_router
+from app.routers.filter import router as filter_router
 
 
 @asynccontextmanager
@@ -23,6 +24,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(es_router)
 app.include_router(search_router)
+app.include_router(filter_router)
 
 
 @app.get("/")

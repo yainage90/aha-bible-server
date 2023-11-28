@@ -10,17 +10,17 @@ class Searcher:
         page: int = 1,
         per_page: int = 10,
         query: str | None = None,
-        book: str | None = None,
         sorting_type: SortingType | None = SortingType.MATCH,
-        title: str | None = None,
+        books: list[str] | None = None,
+        titles: list[str] | None = None,
     ) -> list[dict]:
         query_dsl: dict = SearchQueryDsl(
             page=page,
             per_page=per_page,
             query=query,
-            book=book,
+            books=books,
             sorting_type=sorting_type,
-            title=title,
+            titles=titles,
         ).to_dict()
 
         response = BibleKRVDocument().search().update_from_dict(query_dsl).execute()
