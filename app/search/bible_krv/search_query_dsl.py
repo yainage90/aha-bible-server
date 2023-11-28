@@ -8,6 +8,7 @@ class SearchQueryDsl:
         page: int = 1,
         per_page: int = 10,
         query: str | None = None,
+        book: str | None = None,
         sorting_type: SortingType | None = SortingType.MATCH,
         title: str | None = None,
     ):
@@ -19,7 +20,10 @@ class SearchQueryDsl:
 
         query = query.strip()
         if query:
-            self._should.append(EsQuery.match(field="text", query=query))
+            self._should.append(EsQuery.match(field="text", query=query, operator="or"))
+
+        if book:
+            self._filter.append(EsQuery.term(field="book", value=book))
 
         if title:
             self._filter.append(EsQuery.term(field="title.raw", value=title))
@@ -32,6 +36,7 @@ class SearchQueryDsl:
             "query": {
                 "bool": {
                     "should": self._should,
+                    "minimum_should_match": 1 if self._should else 0,
                     "filter": self._filter,
                 }
             },

@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class BibleSearchItem(BaseModel):
     id: str
     idx: int
+    book: str
     title: str
     title_abbreviation: str
     chapter: int

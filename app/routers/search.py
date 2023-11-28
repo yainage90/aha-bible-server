@@ -12,6 +12,7 @@ def search_bible_krv(
     page: int = 1,
     per_page: int = 10,
     query: str | None = None,
+    book: str | None = None,
     title: str | None = None,
     sorting_type: str | None = None,
 ) -> BibleSearchResponse:
@@ -20,12 +21,14 @@ def search_bible_krv(
         page=page,
         per_page=per_page,
         query=query,
+        book=book,
         title=title,
         sorting_type=sorting_type,
     )
 
     total = result["total"]
     docs = result["docs"]
+    print(docs)
 
     prev_page = page - 1 if page > 1 else None
     next_page = page + 1 if per_page * page < total else None

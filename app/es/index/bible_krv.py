@@ -56,18 +56,20 @@ class Indexer:
 
                     title = fname.split(".")[0]
                     tokens = line.split()
-                    idx = tokens[0]
-                    abbr = p.match(tokens[1]).group()
-                    chapter, verse = tokens[1].replace(abbr, "").split(":")
+                    book = tokens[0]
+                    idx = tokens[1]
+                    abbr = p.match(tokens[2]).group()
+                    chapter, verse = tokens[2].replace(abbr, "").split(":")
                     chapter = int(chapter)
                     verse = int(verse)
-                    text = " ".join(tokens[2:])
+                    text = " ".join(tokens[3:])
 
                     docs.append(
                         BibleKRVDocument(
                             _index=index_name,
                             _id=f"{abbr}_{chapter}_{verse}",
                             id=f"{abbr}_{chapter}_{verse}",
+                            book=book,
                             idx=idx,
                             title=title,
                             title_abbreviation=abbr,

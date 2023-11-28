@@ -14,6 +14,7 @@ class BibleKRVDocument(Document):
         }
 
     id = Keyword()
+    book = Keyword()
     idx = Integer()
     title = Text(
         analyzer=INDEX_ANALYZER_NAME,
