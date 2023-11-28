@@ -12,7 +12,7 @@ def search_bible_krv(
     page: int = 1,
     per_page: int = 10,
     query: str | None = None,
-    chapter: str | None = None,
+    title: str | None = None,
     sorting_type: str | None = None,
 ) -> BibleSearchResponse:
     sorting_type = SortingType.find_by_name(sorting_type)
@@ -20,7 +20,7 @@ def search_bible_krv(
         page=page,
         per_page=per_page,
         query=query,
-        chapter=chapter,
+        title=title,
         sorting_type=sorting_type,
     )
 

@@ -9,7 +9,7 @@ class SearchQueryDsl:
         per_page: int = 10,
         query: str | None = None,
         sorting_type: SortingType | None = SortingType.MATCH,
-        chapter: str | None = None,
+        title: str | None = None,
     ):
         self._size = per_page
         self._from = per_page * (page - 1)
@@ -21,8 +21,8 @@ class SearchQueryDsl:
         if query:
             self._should.append(EsQuery.match(field="text", query=query))
 
-        if chapter:
-            self._filter.append(EsQuery.term(field="chapter", value=chapter))
+        if title:
+            self._filter.append(EsQuery.term(field="title.raw", value=title))
 
     def to_dict(self):
         return {
