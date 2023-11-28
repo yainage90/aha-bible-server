@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from app.search.bible_krv.sorting_type import SortingType
 from app.search.bible_krv.search import Searcher
-from app.search.bible_krv.filter import Aggregator
 from app.schema.search import BibleSearchResponse
 
 router = APIRouter(prefix="/search")

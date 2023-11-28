@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 from app.search.bible_krv.sorting_type import SortingType
 from app.search.bible_krv.filter import Aggregator
+from app.schema.filter import BibleFilterResponse
 
 router = APIRouter(prefix="/filter")
 
 
-@router.get("/bible_krv")
+@router.get("/bible_krv", response_model=BibleFilterResponse)
 def filter_bible_krv(
     query: str | None = None,
     book: str | None = None,
@@ -27,4 +28,7 @@ def filter_bible_krv(
         titles=titles,
     )
 
-    return result
+    return BibleFilterResponse(
+        total=result["total"],
+        filters=result["filters"],
+    )
