@@ -12,7 +12,7 @@ def filter_bible_krv(
     book: str | None = None,
     title: str | None = None,
     sorting_type: str | None = None,
-) -> dict:
+) -> BibleFilterResponse:
     books = None
     if book:
         books = [book for book in book.split(",")]

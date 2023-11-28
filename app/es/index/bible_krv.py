@@ -41,7 +41,7 @@ class Indexer:
         return index_name
 
     @classmethod
-    def _index_docs(cls, index_name: str):
+    def _index_docs(cls, index_name: str) -> int:
         projct_root = pathlib.Path(
             pathlib.Path(pathlib.Path(__file__).parent).parent
         ).parent
@@ -85,8 +85,10 @@ class Indexer:
             helpers.bulk(es_conn, batch_docs)
             es_conn.indices.refresh(index=index_name, request_timeout=10)
 
+        return len(docs)
+
     @classmethod
-    def _switch_alias(cls, alias_name: str, new_index_name: str):
+    def _switch_alias(cls, alias_name: str, new_index_name: str) -> dict | None:
         es = connections.get_connection()
         try:
             aliases = es.indices.get_alias(index=alias_name)
@@ -103,16 +105,30 @@ class Indexer:
 
             aliases = es.indices.get_alias(index=f"{alias_name}*")
             old_index_names = list(aliases.keys())
-            for old_index_name in set(old_index_names) - set(
-                [new_index_name, prev_index_name]
-            ):
+            indices_to_delete = list(
+                sorted(
+                    list(set(old_index_names) - set([new_index_name, prev_index_name]))
+                )
+            )
+            for old_index_name in indices_to_delete:
                 es.indices.delete(index=old_index_name)
+
+            return {
+                "prev_alias": prev_index_name,
+                "new_alias": new_index_name,
+                "deleted_indices": indices_to_delete,
+            }
 
         except NotFoundError:
             es.indices.put_alias(index=new_index_name, name=alias_name)
 
     @classmethod
-    def full_index(cls, alias_name: str):
+    def full_index(cls, alias_name: str) -> dict:
         new_index_name = cls._create_index(alias_name=alias_name)
-        cls._index_docs(index_name=new_index_name)
-        cls._switch_alias(alias_name=alias_name, new_index_name=new_index_name)
+        total = cls._index_docs(index_name=new_index_name)
+        result = cls._switch_alias(alias_name=alias_name, new_index_name=new_index_name)
+
+        return {
+            "total": total,
+            "result": result,
+        }
