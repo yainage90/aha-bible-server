@@ -25,14 +25,7 @@ class Searcher:
         total = response.hits.total.value
         docs = [hit.to_dict() for hit in response.hits]
 
-        prev_page = page - 1 if page > 1 else None
-        next_page = page + 1 if per_page * page < total else None
-
         return {
             "total": total,
-            "page": page,
-            "prev_page": prev_page,
-            "next_page": next_page,
-            "sorting_types": SortingType.options(),
             "docs": docs,
         }
