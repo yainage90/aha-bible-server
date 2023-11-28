@@ -13,6 +13,7 @@ class BibleKRVDocument(Document):
             "number_of_replicas": 0,
         }
 
+    id = Keyword()
     idx = Integer()
     title = Text(
         analyzer=INDEX_ANALYZER_NAME,

@@ -1,12 +1,23 @@
 import re
 import os
 import pathlib
+import logging
 from datetime import datetime as dt
 from app.es.documents.bible_krv import BibleKRVDocument
 from app.es.analysis.korean_analysis import KrAnalysis
 from elasticsearch_dsl import Index, connections
 from elasticsearch import helpers
 from elasticsearch.exceptions import NotFoundError
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(process)d:%(name)s:%(lineno)s] [%(levelname)s] %(message)s",
+)
+
+logger = logging.getLogger(__name__)
+steam_handler = logging.StreamHandler()
+logger.addHandler(steam_handler)
 
 
 class Indexer:
@@ -17,7 +28,6 @@ class Indexer:
         suffix = dt.now().strftime("%Y%m%d%H%M%S")
         index_name = f"{alias_name}_{suffix}"
         index = Index(name=index_name)
-        print(index_name)
         index.document(BibleKRVDocument)
         index.settings(**BibleKRVDocument.Index.settings)
 
@@ -57,6 +67,7 @@ class Indexer:
                         BibleKRVDocument(
                             _index=index_name,
                             _id=f"{abbr}_{chapter}_{verse}",
+                            id=f"{abbr}_{chapter}_{verse}",
                             idx=idx,
                             title=title,
                             title_abbreviation=abbr,
