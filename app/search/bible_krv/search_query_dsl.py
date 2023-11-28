@@ -35,5 +35,13 @@ class SearchQueryDsl:
                     "filter": self._filter,
                 }
             },
+            "highlight": {
+                "fields": {
+                    "text": {
+                        "pre_tags": ["<b>"],
+                        "post_tags": ["</b>"],
+                    },
+                },
+            },
             "sort": self.sorting_type.sort_query,
         }

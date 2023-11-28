@@ -9,6 +9,7 @@ class BibleSearchItem(BaseModel):
     chapter: int
     verse: int
     text: str
+    highlight: str | None
 
 
 class BibleSearchResponse(BaseModel):

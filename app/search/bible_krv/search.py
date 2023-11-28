@@ -12,7 +12,7 @@ class Searcher:
         query: str | None = None,
         sorting_type: SortingType | None = SortingType.MATCH,
         chapter: str | None = None,
-    ) -> list[BibleKRVDocument]:
+    ) -> list[dict]:
         query_dsl: dict = SearchQueryDsl(
             page=page,
             per_page=per_page,
@@ -23,7 +23,15 @@ class Searcher:
 
         response = BibleKRVDocument().search().update_from_dict(query_dsl).execute()
         total = response.hits.total.value
-        docs = [hit.to_dict() for hit in response.hits]
+
+        docs = []
+        for hit in response:
+            doc = hit.to_dict()
+            if "highlight" in hit.meta and "text" in hit.meta.highlight:
+                highlighted_text = hit.meta.highlight.text
+                if highlighted_text:
+                    doc["highlight"] = highlighted_text[0]
+            docs.append(doc)
 
         return {
             "total": total,
