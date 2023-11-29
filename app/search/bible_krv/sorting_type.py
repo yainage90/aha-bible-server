@@ -50,3 +50,10 @@ class SortingType(Enum):
             }
             for s in cls
         ]
+
+    @property
+    def option(self):
+        return {
+            "name": self.name,
+            "display_name": self.display_name,
+        }

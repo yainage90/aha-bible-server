@@ -44,6 +44,7 @@ def search_bible_krv(
         page=page,
         prev_page=prev_page,
         next_page=next_page,
+        sorting_type=sorting_type.name,
         sorting_types=SortingType.options(),
         docs=docs,
     )

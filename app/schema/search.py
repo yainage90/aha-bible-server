@@ -18,5 +18,6 @@ class BibleSearchResponse(BaseModel):
     page: int
     prev_page: int | None = None
     next_page: int | None = None
+    sorting_type: str
     sorting_types: list[dict[str, str]]
     docs: list[BibleSearchItem]
