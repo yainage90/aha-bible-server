@@ -10,13 +10,13 @@ class BibleSearchItem(BaseModel):
     chapter: int
     verse: int
     text: str
-    highlight: str | None
+    highlight: str | None = None
 
 
 class BibleSearchResponse(BaseModel):
     total: int
     page: int
-    prev_page: int | None
-    next_page: int | None
+    prev_page: int | None = None
+    next_page: int | None = None
     sorting_types: list[dict[str, str]]
     docs: list[BibleSearchItem]
