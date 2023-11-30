@@ -5,6 +5,7 @@ import logging
 from datetime import datetime as dt
 from app.es.documents.bible_krv import BibleKRVDocument
 from app.es.analysis.korean_analysis import KrAnalysis
+from app.search.bible_krv.filter_order import FilterOrder
 from elasticsearch_dsl import Index, connections
 from elasticsearch import helpers
 from elasticsearch.exceptions import NotFoundError
@@ -47,7 +48,10 @@ class Indexer:
         ).parent
         data_dir = f"{projct_root}/data/bible/krv"
         fnames = os.listdir(data_dir)
+        fnames.sort(key=lambda x: FilterOrder.get_title_order(x.replace(".txt", "")))
         docs: list[BibleKRVDocument] = []
+        prev_title_chapter = None
+        chapter_idx = -1
         for fname in fnames:
             with open(f"{data_dir}/{fname}", "r", encoding="utf-8") as f:
                 lines = f.readlines()
@@ -64,6 +68,11 @@ class Indexer:
                     verse = int(verse)
                     text = " ".join(tokens[3:])
 
+                    title_chapter = f"{title}_{chapter}"
+                    if title_chapter != prev_title_chapter:
+                        chapter_idx += 1
+                        prev_title_chapter = title_chapter
+
                     docs.append(
                         BibleKRVDocument(
                             _index=index_name,
@@ -74,6 +83,7 @@ class Indexer:
                             title=title,
                             title_abbreviation=abbr,
                             chapter=chapter,
+                            chapter_idx=chapter_idx,
                             verse=verse,
                             text=text,
                         ).to_dict(include_meta=True)

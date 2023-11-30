@@ -25,6 +25,7 @@ class BibleKRVDocument(Document):
     )
     title_abbreviation = Keyword()
     chapter = Integer()
+    chapter_idx = Integer()
     verse = Integer()
     text = Text(
         analyzer=INDEX_ANALYZER_NAME,

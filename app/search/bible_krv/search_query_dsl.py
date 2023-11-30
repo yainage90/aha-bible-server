@@ -11,6 +11,8 @@ class SearchQueryDsl:
         sorting_type: SortingType | None = SortingType.MATCH,
         books: list[str] | None = None,
         titles: list[str] | None = None,
+        chapters: list[str] | None = None,
+        chapter_idx: int | None = None,
     ):
         self._size = per_page
         self._from = per_page * (page - 1)
@@ -27,6 +29,12 @@ class SearchQueryDsl:
 
         if titles:
             self._filter.append(EsQuery.terms(field="title.raw", values=titles))
+
+        if chapters:
+            self._filter.append(EsQuery.terms(field="chapter", values=chapters))
+
+        if chapter_idx is not None:
+            self._filter.append(EsQuery.term(field="chapter_idx", value=chapter_idx))
 
     def to_dict(self):
         return {
