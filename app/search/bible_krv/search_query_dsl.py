@@ -6,7 +6,7 @@ class SearchQueryDsl:
     def __init__(
         self,
         page: int = 1,
-        per_page: int = 10,
+        per_page: int = 1000,
         query: str | None = None,
         sorting_type: SortingType | None = SortingType.MATCH,
         books: list[str] | None = None,

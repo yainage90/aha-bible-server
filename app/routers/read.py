@@ -9,7 +9,7 @@ router = APIRouter(prefix="/read")
 @router.get("/bible_krv", response_model=BibleReadResponse)
 def read_bible_krv(
     page: int = 1,
-    per_page: int = 10,
+    per_page: int = 1000,
     book: str | None = None,
     title: str | None = None,
     chapter: int | None = None,
