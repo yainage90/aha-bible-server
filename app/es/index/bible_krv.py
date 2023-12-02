@@ -11,16 +11,6 @@ from elasticsearch import helpers
 from elasticsearch.exceptions import NotFoundError
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(process)d:%(name)s:%(lineno)s] [%(levelname)s] %(message)s",
-)
-
-logger = logging.getLogger(__name__)
-steam_handler = logging.StreamHandler()
-logger.addHandler(steam_handler)
-
-
 class Indexer:
     INDEX_BATCH_SIZE = 5000
 
