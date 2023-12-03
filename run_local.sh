@@ -1,0 +1,1 @@
+docker run --name aha-bible-server --rm -p 8000:8000 --network host --env-file ./.env aha-bible-server
