@@ -6,7 +6,7 @@ class BibleSearchItem(BaseModel):
     idx: int
     book: str
     title: str
-    title_abbreviation: str
+    title_abbr: str
     chapter: int
     verse: int
     text: str

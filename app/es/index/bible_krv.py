@@ -36,48 +36,45 @@ class Indexer:
         projct_root = pathlib.Path(
             pathlib.Path(pathlib.Path(__file__).parent).parent
         ).parent
-        data_dir = f"{projct_root}/data/bible/krv"
-        fnames = os.listdir(data_dir)
-        fnames.sort(key=lambda x: FilterOrder.get_title_order(x.replace(".txt", "")))
+        bible_krv_path = f"{projct_root}/data/bible/krv.txt"
+
         docs: list[BibleKRVDocument] = []
         prev_title_chapter = None
         chapter_idx = -1
-        for fname in fnames:
-            with open(f"{data_dir}/{fname}", "r", encoding="utf-8") as f:
-                lines = f.readlines()
-                for line in lines:
-                    p = re.compile(r"[가-힣]+")
+        with open(bible_krv_path, "r") as f:
+            lines = f.readlines()
+            for line in lines:
+                p = re.compile(r"[가-힣]+")
 
-                    title = fname.split(".")[0]
-                    tokens = line.split()
-                    book = tokens[0]
-                    idx = tokens[1]
-                    abbr = p.match(tokens[2]).group()
-                    chapter, verse = tokens[2].replace(abbr, "").split(":")
-                    chapter = int(chapter)
-                    verse = int(verse)
-                    text = " ".join(tokens[3:])
+                tokens = line.split()
+                idx = tokens[0]
+                book = tokens[1]
+                abbr = tokens[2]
+                title = tokens[3]
+                chapter = int(tokens[4])
+                verse = int(tokens[5])
+                text = " ".join(tokens[6:])
 
-                    title_chapter = f"{title}_{chapter}"
-                    if title_chapter != prev_title_chapter:
-                        chapter_idx += 1
-                        prev_title_chapter = title_chapter
+                title_chapter = f"{title}_{chapter}"
+                if title_chapter != prev_title_chapter:
+                    chapter_idx += 1
+                    prev_title_chapter = title_chapter
 
-                    docs.append(
-                        BibleKRVDocument(
-                            _index=index_name,
-                            _id=f"{abbr}_{chapter}_{verse}",
-                            id=f"{abbr}_{chapter}_{verse}",
-                            book=book,
-                            idx=idx,
-                            title=title,
-                            title_abbreviation=abbr,
-                            chapter=chapter,
-                            chapter_idx=chapter_idx,
-                            verse=verse,
-                            text=text,
-                        ).to_dict(include_meta=True)
-                    )
+                docs.append(
+                    BibleKRVDocument(
+                        _index=index_name,
+                        _id=f"{abbr}_{chapter}_{verse}",
+                        id=f"{abbr}_{chapter}_{verse}",
+                        book=book,
+                        idx=idx,
+                        title=title,
+                        title_abbr=abbr,
+                        chapter=chapter,
+                        chapter_idx=chapter_idx,
+                        verse=verse,
+                        text=text,
+                    ).to_dict(include_meta=True)
+                )
 
         es_conn = connections.get_connection()
         for i in range(0, len(docs), cls.INDEX_BATCH_SIZE):

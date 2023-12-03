@@ -23,7 +23,7 @@ class BibleKRVDocument(Document):
             "raw": Keyword(),
         },
     )
-    title_abbreviation = Keyword()
+    title_abbr = Keyword()
     chapter = Integer()
     chapter_idx = Integer()
     verse = Integer()
