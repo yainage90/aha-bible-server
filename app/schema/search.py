@@ -8,6 +8,7 @@ class BibleSearchItem(BaseModel):
     title: str
     title_abbr: str
     chapter: int
+    chapter_idx: int
     verse: int
     text: str
     highlight: str | None = None
