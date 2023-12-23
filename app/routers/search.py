@@ -9,7 +9,7 @@ router = APIRouter(prefix="/search")
 @router.get("/bible_krv", response_model=BibleSearchResponse)
 def search_bible_krv(
     page: int = 1,
-    per_page: int = 10,
+    per_page: int = 1000,
     query: str | None = None,
     book: str | None = None,
     title: str | None = None,

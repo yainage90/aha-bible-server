@@ -22,7 +22,7 @@ class SearchQueryDsl:
 
         if query:
             query = query.strip()
-            self._should.append(EsQuery.match(field="text", query=query, operator="or"))
+            self._should.append(EsQuery.match(field="text", query=query, operator="and"))
 
         if books:
             self._filter.append(EsQuery.terms(field="book", values=books))
